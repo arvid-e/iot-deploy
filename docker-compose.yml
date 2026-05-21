@@ -29,7 +29,8 @@ services:
     build:
       context: ../iot-frontend
       dockerfile: Dockerfile
-    env_file: .env
+    args:
+        - VITE_MQTT_BROKER_URL=${VITE_MQTT_BROKER_URL}
     restart: always
     networks:
       - web-net
