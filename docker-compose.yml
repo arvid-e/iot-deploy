@@ -1,0 +1,57 @@
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - web-net
+
+  api:
+    build:
+      context: ../iot-backend
+      dockerfile: Dockerfile
+    restart: always
+    env_file: .env
+    depends_on:
+      mongodb:
+        condition: service_started
+    environment:
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/dbname?authSource=admin
+    networks:
+      - web-net
+
+  frontend:
+    build:
+      context: ../iot-frontend/client
+      dockerfile: Dockerfile.frontend
+    restart: always
+    networks:
+      - web-net
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt/live/${DOMAIN_NAME}/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem:/etc/nginx/certs/privkey.pem:ro
+    networks:
+      - web-net
+    depends_on:
+      - api
+      - frontend
+
+networks:
+  web-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+
