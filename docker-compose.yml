@@ -26,7 +26,7 @@ services:
 
   frontend:
     build:
-      context: ../iot-frontend/client
+      context: ../iot-frontend/src
       dockerfile: Dockerfile.frontend
     restart: always
     networks:
