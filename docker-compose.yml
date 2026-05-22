@@ -10,19 +10,6 @@ services:
     networks:
       - web-net
 
-  emqx:
-    image: emqx:latest
-    restart: always
-    ports:
-      - "127.0.0.1:18083:18083"  # only on loopback, not public
-    environment:
-      - EMQX_DASHBOARD__DEFAULT_PASSWORD=${EMQX_DASHBOARD_PASSWORD}
-    volumes:
-      - emqx_data:/opt/emqx/data
-      - emqx_log:/opt/emqx/log
-    networks:
-      - web-net
-
   api:
     build:
       context: ../iot-backend
