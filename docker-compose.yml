@@ -13,6 +13,8 @@ services:
   emqx:
     image: emqx:latest
     restart: always
+    ports:
+      - "127.0.0.1:18083:18083"  # only on loopback, not public
     environment:
       - EMQX_DASHBOARD__DEFAULT_PASSWORD=${EMQX_DASHBOARD_PASSWORD}
     volumes:
