@@ -10,6 +10,17 @@ services:
     networks:
       - web-net
 
+  emqx:
+    image: emqx:latest
+    restart: always
+    environment:
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD=${EMQX_DASHBOARD_PASSWORD}
+    volumes:
+      - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
+    networks:
+      - web-net
+
   api:
     build:
       context: ../iot-backend
@@ -22,6 +33,9 @@ services:
     environment:
       - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/dbname?authSource=admin
       - DOMAIN_NAME=${DOMAIN_NAME}
+      - MQTT_BROKER_URL=mqtt://emqx:1883
+      - MQTT_USERNAME=${MQTT_BACKEND_USER}
+      - MQTT_PASSWORD=${MQTT_BACKEND_PASSWORD}
     networks:
       - web-net
 
@@ -57,4 +71,6 @@ networks:
 
 volumes:
   mongo-data:
+  emqx_data:
+  emqx_log:
 
