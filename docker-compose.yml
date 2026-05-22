@@ -22,7 +22,7 @@ services:
     environment:
       - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/dbname?authSource=admin
       - DOMAIN_NAME=${DOMAIN_NAME}
-      - MQTT_BROKER_URL=mqtt://emqx:1883
+      - MQTT_BROKER_URL=${MQTT_BROKER_URL}
       - MQTT_USERNAME=${MQTT_BACKEND_USER}
       - MQTT_PASSWORD=${MQTT_BACKEND_PASSWORD}
     networks:
@@ -60,6 +60,4 @@ networks:
 
 volumes:
   mongo-data:
-  emqx_data:
-  emqx_log:
 
